@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Area Search (original)</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-draw@1.0.4/dist/leaflet.draw.css" />
+    <link rel="stylesheet" href="styles/main.css" />
+</head>
+<body>
+
+    <div id="sidebar">
+        <h2>5D Spatial Indexer</h2>
+        <p class="hint">Draw a rectangle, click a cached box on the map, or type a box below.</p>
+
+        <div class="control-group">
+            <label for="sensor-select">Target sensor</label>
+            <select id="sensor-select">
+                <option value="oxygen">Oxygen (O2 Spectroscopy)</option>
+                <option value="nitrate">Nitrate Analysis</option>
+                <option value="temperature">Core Temperature (CTD)</option>
+            </select>
+        </div>
+
+        <div class="control-group">
+            <label for="bbox-input">Box (min_lon, min_lat, max_lon, max_lat)</label>
+            <input id="bbox-input" type="text" placeholder="-45,51,-43,53" spellcheck="false">
+            <div class="button-row">
+                <button id="search-btn" type="button">Search box</button>
+                <button id="view-btn" type="button" class="secondary">Use map view</button>
+            </div>
+            <div class="button-row">
+                <button id="zoom-btn" type="button" class="secondary">Zoom to tracks</button>
+                <button id="copy-link-btn" type="button" class="secondary">Copy search link</button>
+            </div>
+        </div>
+
+        <div id="rule-panel" class="rule"></div>
+        <div id="status-panel"><h3>System Readout</h3><p>Loading platforms and cached boxes…</p></div>
+        <div id="results-panel"></div>
+    </div>
+
+    <div id="map"></div>
+
+    <aside id="panel">
+        <section>
+            <h3>Layers</h3>
+            <label class="toggle"><input type="checkbox" data-layer="platforms" checked> All platforms</label>
+            <label class="toggle"><input type="checkbox" data-layer="fresh" checked> Fresh boxes <span id="count-fresh" class="count">0</span></label>
+            <label class="toggle"><input type="checkbox" data-layer="expired"> Expired boxes <span id="count-expired" class="count">0</span></label>
+            <label class="toggle"><input type="checkbox" data-layer="results" checked> Search results</label>
+        </section>
+        <section>
+            <h3 class="section-head">Recent searches <button id="clear-recent" type="button" class="link-btn">Clear</button></h3>
+            <div id="recent-list" class="scroll-list"></div>
+        </section>
+        <section>
+            <h3>Legend</h3>
+            <div id="legend" class="legend"></div>
+        </section>
+    </aside>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet-draw@1.0.4/dist/leaflet.draw.js"></script>
+    <script src="config.js"></script>
+    <script src="scripts/area-search.js"></script>
+</body>
+</html>

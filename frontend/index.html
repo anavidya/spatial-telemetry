@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Glider Reference Finder</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="styles/main.css" />
+</head>
+<body>
+
+    <div id="sidebar">
+        <h2>Glider Reference Finder</h2>
+        <p class="hint">Pick a glider deployment to find Argo profiles that can check its sensors.</p>
+
+        <div class="control-group">
+            <label for="sensor-select">Sensor to check</label>
+            <select id="sensor-select">
+                <option value="temperature">Temperature</option>
+                <option value="salinity">Salinity (conductivity)</option>
+                <option value="oxygen">Oxygen</option>
+            </select>
+        </div>
+
+        <div class="control-group">
+            <label for="deploy-filter">Glider deployments <span id="deploy-count" class="count">0</span></label>
+            <input id="deploy-filter" type="text" placeholder="Filter by name or institution" spellcheck="false">
+            <label class="toggle inline"><input id="in-view" type="checkbox" checked> Only those in map view</label>
+            <div id="deploy-list" class="scroll-list deploy-list"></div>
+            <p id="catalogue-status" class="hint"></p>
+        </div>
+
+        <div id="status-panel"></div>
+        <div id="results-panel"></div>
+    </div>
+
+    <div id="map"></div>
+
+    <aside id="panel">
+        <section>
+            <h3>Layers</h3>
+            <label class="toggle"><input type="checkbox" data-layer="deployments" checked> Deployments</label>
+            <label class="toggle"><input type="checkbox" data-layer="glider" checked> Glider dives</label>
+            <label class="toggle"><input type="checkbox" data-layer="argo" checked> Argo profiles nearby</label>
+            <label class="toggle"><input type="checkbox" data-layer="refs" checked> Reference profiles</label>
+        </section>
+        <section>
+            <h3 class="section-head">Recent gliders <button id="clear-recent" type="button" class="link-btn">Clear</button></h3>
+            <div id="recent-list" class="scroll-list"></div>
+        </section>
+        <section>
+            <h3>Legend</h3>
+            <div id="legend" class="legend"></div>
+        </section>
+        <p class="hint"><a href="area-search.html">Original area search ↗</a></p>
+    </aside>
+
+    <div id="compare-overlay" hidden>
+        <div id="compare-panel" role="dialog" aria-modal="true" aria-labelledby="compare-title">
+            <button id="compare-close" type="button" class="close-btn" aria-label="Close">×</button>
+            <div id="compare-body"></div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="config.js"></script>
+    <script src="scripts/app.js"></script>
+    <script src="scripts/compare.js"></script>
+</body>
+</html>

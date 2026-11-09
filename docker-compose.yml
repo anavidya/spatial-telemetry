@@ -1,0 +1,80 @@
+services:
+  postgis:
+    image: postgis/postgis:16-3.4-alpine
+    container_name: postgis_dev
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "${POSTGRES_HOST_PORT}:5432"
+    volumes:
+      - postgis_data:/var/lib/postgresql/data
+      - ./init_db:/docker-entrypoint-initdb.d
+    networks:
+      - ocean_network
+
+  backend:
+    build: .
+    container_name: ocean_fastapi_backend
+    ports:
+      - "${BACKEND_HOST_PORT}:8000"
+    environment:
+      # Inside the compose network: service name + container port
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgis:5432/${POSTGRES_DB}
+      MATCH_MAX_DIST_M: ${MATCH_MAX_DIST_M}
+      MATCH_MAX_DEPTH_DIFF_M: ${MATCH_MAX_DEPTH_DIFF_M}
+      MATCH_MAX_TIME_DIFF_DAYS: ${MATCH_MAX_TIME_DIFF_DAYS}
+      CACHE_TTL_HOURS: ${CACHE_TTL_HOURS}
+      ARGO_SOURCE: ${ARGO_SOURCE}
+      FETCH_LOOKBACK_DAYS: ${FETCH_LOOKBACK_DAYS}
+      MAX_FETCH_AREA_DEG2: ${MAX_FETCH_AREA_DEG2}
+      GLIDER_ERDDAP_URL: ${GLIDER_ERDDAP_URL}
+      GLIDER_MAX_DATASETS: ${GLIDER_MAX_DATASETS}
+      GLIDER_PARALLEL: ${GLIDER_PARALLEL}
+      GLIDER_DATASET_TIMEOUT_S: ${GLIDER_DATASET_TIMEOUT_S}
+      GLIDER_CATALOGUE_TTL_MIN: ${GLIDER_CATALOGUE_TTL_MIN}
+      MOCK_GLIDER: ${MOCK_GLIDER}
+      GLIDER_ERDDAP_URLS: ${GLIDER_ERDDAP_URLS}
+      GLIDER_TRAJ_SAMPLE: ${GLIDER_TRAJ_SAMPLE}
+      GLIDER_TRAJ_BIN_HOURS: ${GLIDER_TRAJ_BIN_HOURS}
+      GLIDER_MAX_EXTENT_DEG: ${GLIDER_MAX_EXTENT_DEG}
+      REF_MAX_DIST_M: ${REF_MAX_DIST_M}
+      REF_MAX_TIME_DAYS: ${REF_MAX_TIME_DAYS}
+      REF_LAYER_TOP_M: ${REF_LAYER_TOP_M}
+      REF_MIN_OVERLAP_M: ${REF_MIN_OVERLAP_M}
+      REF_TOP_N: ${REF_TOP_N}
+      ARGO_FETCH_TTL_DAYS: ${ARGO_FETCH_TTL_DAYS}
+      CMP_SAL_OK: ${CMP_SAL_OK}
+      CMP_SAL_WARN: ${CMP_SAL_WARN}
+      CMP_MIN_LEVELS: ${CMP_MIN_LEVELS}
+      PROFILES_RETENTION_DAYS: ${PROFILES_RETENTION_DAYS}
+      GLIDER_SHALLOW_TRACK_HOURS: ${GLIDER_SHALLOW_TRACK_HOURS}
+      GLIDER_SEARCH_TIMEOUT_S: ${GLIDER_SEARCH_TIMEOUT_S}
+      GLIDER_PER_DIVE_MAX_PROFILES: ${GLIDER_PER_DIVE_MAX_PROFILES}
+    depends_on:
+      - postgis
+    volumes:
+      - ./backend:/app
+    networks:
+      - ocean_network
+
+  frontend:
+    image: nginx:alpine
+    container_name: ocean_nginx_frontend
+    ports:
+      - "${FRONTEND_HOST_PORT}:80"
+    environment:
+      API_BASE_URL: ${API_BASE_URL}
+    volumes:
+      - ./frontend:/usr/share/nginx/html:ro
+      - ./nginx/default.conf.template:/etc/nginx/templates/default.conf.template:ro
+    networks:
+      - ocean_network
+
+networks:
+  ocean_network:
+    driver: bridge
+
+volumes:
+  postgis_data:

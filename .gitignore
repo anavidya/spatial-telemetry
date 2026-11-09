@@ -1,0 +1,13 @@
+# Secrets and local settings: never commit (copy .env.example to .env instead)
+.env
+.env.*
+!.env.example
+
+# Text files (notes, drafts such as blog.txt)
+*.txt
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
