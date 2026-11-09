@@ -140,4 +140,4 @@ Issues and pull requests are welcome, especially new glider servers, better vari
 
 ## License
 
-Not chosen yet. Add a `LICENSE` file before others reuse the code.
+[MIT](LICENSE): free to use, change and share, keeping the copyright notice. The licence covers this code only; the data it reads keeps its own terms (see *Data sources and credits*).
